@@ -31,19 +31,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true">
-            <Button
-                android:id="@+id/btnDriving"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Driving Mode" />
-
-            <Button
-                android:id="@+id/btnWalk"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Walking Mode" />
 
             <Button
                 android:id="@+id/logout"
@@ -53,6 +40,12 @@
                 android:text="Logout" />
 
         </LinearLayout>
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Working"
+            android:layout_margin="10sp"
+            android:id="@+id/workingSwitch"/>
 
     </LinearLayout>
 </FrameLayout>
