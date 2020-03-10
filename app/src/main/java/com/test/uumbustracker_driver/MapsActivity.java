@@ -1,10 +1,5 @@
 package com.test.uumbustracker_driver;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -20,13 +15,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.directions.route.AbstractRouting;
-import com.directions.route.Route;
-import com.directions.route.Routing;
-import com.directions.route.RoutingListener;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 
+import com.directions.route.Route;
+import com.directions.route.RouteException;
+import com.directions.route.RoutingListener;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -42,9 +41,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.squareup.okhttp.internal.http.RouteException;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,21 +55,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     Location mLastLocation;
     LocationRequest mLocationRequest;
-
     private FusedLocationProviderClient mFusedLocationClient;
-
-
     private Button mLogout;
-
     private Switch mWorkingSwitch;
-
     private SupportMapFragment mapFragment;
-
+    TextView ShowStudentNum;
+    private DatabaseReference studNum;
+    DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        ShowStudentNum=findViewById(R.id.studentNum);
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("BusStopArea").child("BusStop");
+
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         polylines = new ArrayList<>();
 
@@ -84,8 +88,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
                     connectDriver();
+                    databaseReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            Student student = dataSnapshot.child("Library").getValue(Student.class);
+                            ShowStudentNum.setText(" Number of students: "+student.getStudentNo());
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                 }else{
                     disconnectDriver();
+                    ShowStudentNum.setText(" ");
                 }
             }
         });
@@ -105,18 +122,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 startActivity(intent);
             }
         });
-    }
-
-    private void getRouteToMarker(LatLng pickupLatLng) {
-        if (pickupLatLng != null && mLastLocation != null){
-            Routing routing = new Routing.Builder()
-                    .travelMode(AbstractRouting.TravelMode.DRIVING)
-                    .withListener(this)
-                    .alternativeRoutes(false)
-                    .waypoints(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()), pickupLatLng)
-                    .build();
-            routing.execute();
-        }
     }
 
     @Override
@@ -212,11 +217,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if(mFusedLocationClient != null){
             mFusedLocationClient.removeLocationUpdates(mLocationCallback);
         }
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("driversAvailable");
+
+        GeoFire geoFire = new GeoFire(ref);
+        geoFire.removeLocation(userId);
     }
 
     private List<Polyline> polylines;
-    static final int[] COLORS = new int[]{R.color.primary_dark_material_light};
-
+    private static final int[] COLORS = new int[]{R.color.primary_dark_material_light};
+    @Override
     public void onRoutingFailure(RouteException e) {
         if(e != null) {
             Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -224,12 +234,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Toast.makeText(this, "Something went wrong, Try again", Toast.LENGTH_SHORT).show();
         }
     }
-
-    @Override
-    public void onRoutingFailure(com.directions.route.RouteException e) {
-
-    }
-
     @Override
     public void onRoutingStart() {
     }
