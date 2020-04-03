@@ -20,6 +20,16 @@
         <item name="android:windowBackground">@drawable/background_splash</item>
     </style>
 
+    <style name="RefreshTheme.Theme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <!-- This code is for changing the color of the bar. -->
+        <!-- Type your colour code which you want to set in colorPrimary item -->
+        <item name="colorPrimary">#d9a7c7</item>
+    </style>
+
+    <style name="OKTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar"></style>
+
+
     <style name="SplashTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

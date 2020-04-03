@@ -7,7 +7,7 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/buslogo"/>
+            android:src="@drawable/splashdriver"/>
     </item>
 
 </layer-list>

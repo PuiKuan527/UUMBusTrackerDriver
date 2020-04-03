@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MapsActivity" >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".MapsActivity">
 
     <fragment
         android:id="@+id/map"
@@ -14,13 +15,25 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="10dp"
         android:orientation="vertical">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:indeterminateTint="#428bca"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.616"
+            tools:layout_editor_absoluteX="66dp" />
 
         <TextView
             android:id="@+id/studentNum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#222222"
+            android:textColor="@color/Dark"
             android:background="@drawable/textbox"
             android:textColorHighlight="@android:color/primary_text_dark"
             android:textSize="20dp" />
@@ -33,16 +46,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/logout"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/button"
-                android:text="logout"/>
+                android:text="logout"
+                android:textColor="@color/white"/>
 
         </LinearLayout>
-        <Switch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Working"
-            android:layout_margin="10sp"
-            android:id="@+id/workingSwitch"/>
     </LinearLayout>
-
 </FrameLayout>
