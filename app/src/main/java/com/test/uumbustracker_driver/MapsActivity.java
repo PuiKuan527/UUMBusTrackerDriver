@@ -164,7 +164,7 @@ public class MapsActivity extends AppCompatActivity implements
                 // Otherwise, set the URL to null.
                 Uri.parse("http://host/path"),
                 // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.example.bustracker_driver/http/host/path")
+                Uri.parse("android-app://com.test.uumbustracker_driver/http/host/path")
         );
         AppIndex.AppIndexApi.start(googleApiClient, viewAction);
     }
@@ -183,7 +183,7 @@ public class MapsActivity extends AppCompatActivity implements
                 // Otherwise, set the URL to null.
                 Uri.parse("http://host/path"),
                 // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.example.bustracker_driver/http/host/path")
+                Uri.parse("android-app://com.test.uumbustracker_driver/http/host/path")
         );
         AppIndex.AppIndexApi.end(googleApiClient, viewAction);
     }
